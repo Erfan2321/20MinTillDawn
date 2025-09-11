@@ -1,0 +1,128 @@
+{
+  "erfan": {
+    "name": "erfan",
+    "pass": "1234",
+    "secQuestion": "dog",
+    "point": 11000,
+    "mustKill": 10,
+    "mustTime": 300,
+    "avatarPath": "back1.png"
+  },
+  "erfan2": {
+    "name": "erfan2",
+    "pass": "1234",
+    "secQuestion": "dog",
+    "point": 0,
+    "mustKill": 100010,
+    "mustTime": 300,
+    "avatarPath": "back1.png"
+  },
+  "Test9": {
+    "name": "Test9",
+    "pass": "1234",
+    "secQuestion": "wer",
+    "point": 180,
+    "mustKill": 90,
+    "mustTime": 11,
+    "avatarPath": "avatar1.png"
+  },
+  "Test8": {
+    "name": "Test8",
+    "pass": "1234",
+    "secQuestion": "wer",
+    "point": 160,
+    "mustKill": 80,
+    "mustTime": 10,
+    "avatarPath": "avatar2.png"
+  },
+  "Test7": {
+    "name": "Test7",
+    "pass": "1234",
+    "secQuestion": "wer",
+    "point": 140,
+    "mustKill": 70,
+    "mustTime": 9,
+    "avatarPath": "back1.png"
+  },
+  "Test6": {
+    "name": "Test6",
+    "pass": "1234",
+    "secQuestion": "wer",
+    "point": 120,
+    "mustKill": 60,
+    "mustTime": 8,
+    "avatarPath": "avatar2.png"
+  },
+  "erfan4312": {
+    "name": "erfan4312",
+    "pass": "1234",
+    "secQuestion": "Snoop Dog",
+    "point": 0,
+    "mustKill": 0,
+    "mustTime": 0,
+    "avatarPath": "avatar1.png"
+  },
+  "Test5": {
+    "name": "Test5",
+    "pass": "1234",
+    "secQuestion": "wer",
+    "point": 100,
+    "mustKill": 50,
+    "mustTime": 7,
+    "avatarPath": "avatar1.png"
+  },
+  "Test4": {
+    "name": "Test4",
+    "pass": "1234",
+    "secQuestion": "wer",
+    "point": 80,
+    "mustKill": 40,
+    "mustTime": 6,
+    "avatarPath": "avatar1.png"
+  },
+  "Test3": {
+    "name": "Test3",
+    "pass": "1234",
+    "secQuestion": "wer",
+    "point": 60,
+    "mustKill": 30,
+    "mustTime": 5,
+    "avatarPath": "back1.png"
+  },
+  "erfan44": {
+    "name": "erfan44",
+    "pass": "erfan",
+    "secQuestion": "snoop dog",
+    "point": 0,
+    "mustKill": 0,
+    "mustTime": 0,
+    "avatarPath": "back1.png"
+  },
+  "Test2": {
+    "name": "Test2",
+    "pass": "1234",
+    "secQuestion": "wer",
+    "point": 40,
+    "mustKill": 20,
+    "mustTime": 4,
+    "avatarPath": "avatar1.png"
+  },
+  "Test1": {
+    "name": "Test1",
+    "pass": "1234",
+    "secQuestion": "wer",
+    "point": 20,
+    "mustKill": 10,
+    "mustTime": 3,
+    "avatarPath": "avatar1.png"
+  },
+  "Test0": {
+    "name": "Test0",
+    "pass": "1234",
+    "secQuestion": "wer",
+    "point": 0,
+    "mustKill": 0,
+    "mustTime": 2,
+    "avatarPath": "avatar1.png"
+  }
+}
