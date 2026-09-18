@@ -31,9 +31,9 @@ public class WeaponController {
     private ArrayList<Bullet> bullets = new ArrayList<>();
     private ArrayList<SimpleEffect> deathEffects = new ArrayList<>();
 
-    private SFXManager enemySFX = new SFXManager();
-    private SFXManager shootSFX = new SFXManager();
-    private SFXManager pointSFX = new SFXManager();
+    private static final float REFERENCE_FPS = 60f;
+
+    private final SFXManager sfx = SFXManager.getInstance();
 
     public WeaponController(Player player){
         this.player = player;
@@ -142,7 +142,7 @@ public class WeaponController {
                     bullets.add(new Bullet(x + check * 40, y, x2, y2));
                 check--;
             }
-            shootSFX.play("shoot");
+            sfx.play("shoot");
             weapon.setAmmo(weapon.getAmmo() - 1);
         }
     }
@@ -165,8 +165,11 @@ public class WeaponController {
                 Gdx.graphics.getHeight()/2f - b.getY()
             ).nor();
 
-            b.getSprite().setX(b.getSprite().getX() - direction.x * 20);
-            b.getSprite().setY(b.getSprite().getY() + direction.y * 20);
+            // 20 pixels per frame at 60 FPS, scaled by real time so bullet speed does not
+            // depend on the monitor's refresh rate.
+            float step = 20f * REFERENCE_FPS * Gdx.graphics.getDeltaTime();
+            b.getSprite().setX(b.getSprite().getX() - direction.x * step);
+            b.getSprite().setY(b.getSprite().getY() + direction.y * step);
         }
     }
     private int getDamage (boolean damager) {
@@ -193,7 +196,7 @@ public class WeaponController {
                 if (checkCollision(enemy.getRectangle(), bullet.getRectangle())) {
 
                     enemy.decreaseHealth(getDamage(damager));
-                    enemySFX.play("enemyDamage");
+                    sfx.play("enemyDamage");
                     iterator.remove();
 
                     if (enemy.getHealth() <= 0) {
@@ -256,7 +259,7 @@ public class WeaponController {
                 pointIterator.remove();
                 player.increasePoint(3);
                 topBar.increase(3);
-                pointSFX.play("point");
+                sfx.play("point");
             }
         }
 

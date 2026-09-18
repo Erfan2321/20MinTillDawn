@@ -21,8 +21,13 @@ public class PlayerController {
 
     private Player player;
     private ArrayList<SimpleEffect> deathEffects = new ArrayList<>();
-    private SFXManager sfxManager = new SFXManager();
+    private static final float REFERENCE_FPS = 60f;
+
+    private SFXManager sfxManager = SFXManager.getInstance();
     private float lastWalk = -10000;
+    private float pendingX;
+    private float pendingY;
+    private boolean facingLeft;
 
 
     public PlayerController(Player pLayer) {
@@ -43,59 +48,57 @@ public class PlayerController {
         if (speedy)
             speed *= 2;
 
-        int x = player.getPosX();
-        int y = player.getPosY();
+        // Hero speeds are tuned as pixels per frame at 60 FPS. Scaling by real elapsed time
+        // keeps the game playing the same on a 144 Hz monitor as on a 60 Hz one.
+        float step = speed * REFERENCE_FPS * Gdx.graphics.getDeltaTime();
 
-        if (Gdx.input.isKeyPressed(App.moveUpKey)) {
-            x = player.getPosX();
-            y = player.getPosY() + speed;
-            if (canWalk(x, y))
-                player.setPosY(player.getPosY() + speed);
-            if (time - lastWalk > 0.3) {
-                sfxManager.play("walk");
-                lastWalk = time;
-            }
+        float dx = 0f;
+        float dy = 0f;
+
+        if (Gdx.input.isKeyPressed(App.moveUpKey))    dy += step;
+        if (Gdx.input.isKeyPressed(App.moveDownKey))  dy -= step;
+        if (Gdx.input.isKeyPressed(App.moveRightKey)) dx += step;
+        if (Gdx.input.isKeyPressed(App.moveLeftKey))  dx -= step;
+
+        boolean walking = dx != 0f || dy != 0f;
+
+        if (dx != 0f)
+            setFacingLeft(dx < 0f);
+
+        if (walking && time - lastWalk > 0.3) {
+            sfxManager.play("walk");
+            lastWalk = time;
         }
 
-        if (Gdx.input.isKeyPressed(App.moveRightKey)) {
-            x = player.getPosX() + speed;
-            y = player.getPosY();
-            if (canWalk(x, y))
-                player.setPosX(player.getPosX() + speed);
-            if (time - lastWalk > 0.3) {
-                sfxManager.play("walk");
-                lastWalk = time;
-            }
-        }
+        // Positions are whole pixels, so carry the sub-pixel remainder over to the next frame
+        // instead of truncating it away, which would stall movement at high frame rates.
+        pendingX += dx;
+        pendingY += dy;
+        int moveX = (int) pendingX;
+        int moveY = (int) pendingY;
+        pendingX -= moveX;
+        pendingY -= moveY;
 
-        if (Gdx.input.isKeyPressed(App.moveDownKey)) {
-            x = player.getPosX();
-            y = player.getPosY() - speed;
-            if (canWalk(x, y))
-                player.setPosY(player.getPosY() - speed);
-            if (time - lastWalk > 0.3) {
-                sfxManager.play("walk");
-                lastWalk = time;
-            }
-        }
+        if (moveX != 0 && canWalk(player.getPosX() + moveX, player.getPosY()))
+            player.setPosX(player.getPosX() + moveX);
 
-        if (Gdx.input.isKeyPressed(App.moveLeftKey)) {
-            x = player.getPosX() - speed;
-            y = player.getPosY();
+        if (moveY != 0 && canWalk(player.getPosX(), player.getPosY() + moveY))
+            player.setPosY(player.getPosY() + moveY);
 
-            if (canWalk(x, y))
-                player.setPosX(player.getPosX() - speed);
-            player.getPlayerSprite().flip(true, false);
-            if (time - lastWalk > 0.3) {
-                sfxManager.play("walk");
-                lastWalk = time;
-            }
-        }
-
-        walkToShield(x, y, time);
+        walkToShield(player.getPosX(), player.getPosY(), time);
         smoothFollow(camera, player.getPosX() , player.getPosY());
 
         Main.getBatch().setProjectionMatrix(camera.combined);
+    }
+
+    /** The sprite used to be flipped every frame while walking left, so it strobed. */
+    private void setFacingLeft (boolean left) {
+
+        if (left == facingLeft)
+            return;
+
+        facingLeft = left;
+        player.getPlayerSprite().flip(true, false);
     }
     public void idleAnimation() {
 
@@ -113,7 +116,9 @@ public class PlayerController {
         animation.setPlayMode(Animation.PlayMode.LOOP);
     }
     public static void smoothFollow(Camera camera, float targetX, float targetY) {
-        float lerp = 0.08f;
+        // 0.08 per frame at 60 FPS, expressed so the camera eases at the same rate whatever
+        // the frame rate is.
+        float lerp = 1f - (float) Math.pow(1f - 0.08f, Gdx.graphics.getDeltaTime() * REFERENCE_FPS);
 
         Vector3 position = camera.position;
 
@@ -129,10 +134,14 @@ public class PlayerController {
     }
     private void walkToShield (int x, int y, float time) {
 
-        for (Enemy enemy : Game.getGame().enemies)
-            if (enemy instanceof Elder)
-                if (!((Elder) enemy).isPointInside(x, y))
-                    shieldAttack(time);
+        for (Enemy enemy : Game.getGame().enemies) {
+            if (!(enemy instanceof Elder))
+                continue;
+
+            Elder elder = (Elder) enemy;
+            if (elder.isShieldActive() && !elder.isPointInside(x, y))
+                shieldAttack(time);
+        }
     }
     private void shieldAttack (float time) {
 

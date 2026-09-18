@@ -20,7 +20,11 @@ import static com.badlogic.gdx.math.MathUtils.random;
 
 public class EnemyController {
 
+    private static final float REFERENCE_FPS = 60f;
+
     private int x = -1;
+    private float pendingX;
+    private float pendingY;
     private Player player;
     private boolean gameStarted = Game.getGame().isNew;
     private boolean bossCreated = false;
@@ -229,7 +233,9 @@ public class EnemyController {
     }
     private void moveEnemiesToward(float targetX, float targetY) {
 
-        float speed = 1f;
+        // 1 pixel per frame at 60 FPS, scaled by real time so enemies do not close in faster
+        // on a high refresh rate monitor.
+        float step = REFERENCE_FPS * Gdx.graphics.getDeltaTime();
 
         for (Enemy enemy : enemies) {
 
@@ -243,11 +249,24 @@ public class EnemyController {
             float dy = targetY - enemyY;
             float distance = (float) Math.sqrt(dx * dx + dy * dy);
 
+            // Right on top of the player the direction is undefined; without this the
+            // division produced NaN and warped the enemy to the origin.
+            if (distance < 1f)
+                continue;
+
             float nx = dx / distance;
             float ny = dy / distance;
 
-            enemy.setX((int) (enemyX + nx * speed));
-            enemy.setY((int) (enemyY + ny * speed));
+            pendingX += nx * step;
+            pendingY += ny * step;
+
+            int moveX = (int) pendingX;
+            int moveY = (int) pendingY;
+            pendingX -= moveX;
+            pendingY -= moveY;
+
+            enemy.setX((int) enemyX + moveX);
+            enemy.setY((int) enemyY + moveY);
         }
     }
 

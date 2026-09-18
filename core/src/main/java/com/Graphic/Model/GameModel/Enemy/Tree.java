@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 public class Tree extends Enemy {
 
     private static Animation<Texture> animation = null;
+    private static Texture texture = null;
 
     public Tree(int x, int y) {
         super(Integer.MAX_VALUE, x, y, 200, 100, false);
@@ -14,7 +15,11 @@ public class Tree extends Enemy {
 
     @Override
     public Texture getTexture() {
-        return new Texture(Gdx.files.internal("Enemy/Tree/Tree0.png"));
+
+        if (texture == null)
+            texture = new Texture(Gdx.files.internal("Enemy/Tree/Tree0.png"));
+
+        return texture;
     }
 
     @Override

@@ -46,6 +46,9 @@ public enum Hero {
     private final String character1_idle4;
     private final String character1_idle5;
 
+    private Texture[] frames;
+    private Animation<Texture> idleAnimation;
+
     Hero (int HP, int speed, String character1Idle0, String character1Idle1, String character1Idle2,
           String character1Idle3, String character1Idle4, String character1Idle5) {
 
@@ -67,23 +70,38 @@ public enum Hero {
 
         return Speed;
     }
+    /**
+     * Idle frames, loaded once per hero and reused. They used to be reloaded on every call,
+     * and because idleAnimation() runs once per frame that leaked six textures per frame.
+     */
+    private Texture[] frames() {
+
+        if (frames == null)
+            frames = new Texture[] {
+                new Texture(character1_idle0),
+                new Texture(character1_idle1),
+                new Texture(character1_idle2),
+                new Texture(character1_idle3),
+                new Texture(character1_idle4),
+                new Texture(character1_idle5),
+            };
+
+        return frames;
+    }
     public Texture getTexture (int number) {
 
-        if (number == 1)
-            return new Texture(character1_idle1);
-        else if (number == 2)
-            return new Texture(character1_idle2);
-        else if (number == 3)
-            return new Texture(character1_idle3);
-        else if (number == 4)
-            return new Texture(character1_idle4);
-        else if (number == 5)
-            return new Texture(character1_idle5);
+        Texture[] frames = frames();
+        if (number < 0 || number >= frames.length)
+            number = 0;
 
-        return new Texture(character1_idle0);
+        return frames[number];
     }
     public Animation<Texture> idleAnimation() {
-        return new Animation<>(0.1f, getTexture(0), getTexture(1), getTexture(2), getTexture(3), getTexture(4), getTexture(5));
+
+        if (idleAnimation == null)
+            idleAnimation = new Animation<>(0.1f, frames());
+
+        return idleAnimation;
     }
     public static Hero fromDisplayName(String displayName) {
         for (Hero type : Hero.values())

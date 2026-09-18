@@ -3,6 +3,8 @@ package com.Graphic;
 import com.Graphic.Controller.Profile.ChangeAvatarController;
 import com.Graphic.Controller.SignUpMenuController;
 import com.Graphic.Model.GameAssetManager;
+import com.Graphic.Model.GameModel.SFXManager;
+import com.Graphic.Model.MusicManager;
 import com.Graphic.View.SignUpMenuView;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -32,6 +34,8 @@ public class Main extends Game {
     public void dispose() {
         super.dispose();
         batch.dispose();
+        SFXManager.getInstance().dispose();
+        MusicManager.getInstance().dispose();
         GameAssetManager.getGameAssetManager().dispose();
     }
     public static SpriteBatch getBatch() {

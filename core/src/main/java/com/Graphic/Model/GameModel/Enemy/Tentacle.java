@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 public class Tentacle extends Enemy {
 
     private static Animation<Texture> animation = null;
+    private static Texture texture = null;
 
     public Tentacle (int x, int y) {
         super(25, x, y, 60, 15, true);
@@ -14,7 +15,11 @@ public class Tentacle extends Enemy {
 
     @Override
     public Texture getTexture() {
-        return new Texture(Gdx.files.internal("Enemy/Tantacle/TentacleIdle0.png"));
+
+        if (texture == null)
+            texture = new Texture(Gdx.files.internal("Enemy/Tantacle/TentacleIdle0.png"));
+
+        return texture;
     }
 
     @Override

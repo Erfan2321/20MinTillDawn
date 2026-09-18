@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 public class Eyebat extends Enemy {
 
     private static Animation<Texture> animation = null;
+    private static Texture texture = null;
 
     public Eyebat (int x, int y) {
         super(50, x, y, 60, 60, true);
@@ -14,7 +15,11 @@ public class Eyebat extends Enemy {
 
     @Override
     public Texture getTexture() {
-        return new Texture(Gdx.files.internal("Enemy/Eyebat/T_EyeBat_0.png"));
+
+        if (texture == null)
+            texture = new Texture(Gdx.files.internal("Enemy/Eyebat/T_EyeBat_0.png"));
+
+        return texture;
     }
     @Override
     public Animation<Texture> getAnimation() {

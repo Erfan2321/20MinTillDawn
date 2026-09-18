@@ -11,6 +11,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.ui.TextArea;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
@@ -157,8 +158,15 @@ public class HintMenuView implements Screen {
 
         controller.handleHintButtons();
 
-        if (!controller.getErrorLabel().getText().isEmpty())
-            stage.addActor(controller.getErrorLabel());
+        TextArea hint = controller.getErrorLabel();
+        if (!hint.getText().isEmpty()) {
+            // Keep the panel clear of the button column on the left, whatever the window size.
+            hint.setPosition(stage.getViewport().getWorldWidth() * 0.32f,
+                             stage.getViewport().getWorldHeight() * 0.25f);
+            stage.addActor(hint);
+        } else {
+            hint.remove();
+        }
 
         backClicked = false;
     }

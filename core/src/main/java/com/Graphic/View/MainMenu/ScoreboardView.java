@@ -96,14 +96,18 @@ public class ScoreboardView implements Screen {
         });
         Drawable backgroundDrawable = new TextureRegionDrawable(new TextureRegion(backgroundTexture));
         table.setBackground(backgroundDrawable);
-        printBoard();
         stage.addActor(table);
+        printBoard();
     }
 
 
     private void printBoard () {
 
         User currentUser = GameAssetManager.getGameAssetManager().currentUser;
+        String currentName = currentUser == null ? null : currentUser.getName();
+
+        float rowX = stage.getViewport().getWorldWidth() * 0.35f;
+        float rowY = stage.getViewport().getWorldHeight() - 120f;
 
         int count = 0;
         for (User user : sortedUsers) {
@@ -117,7 +121,7 @@ public class ScoreboardView implements Screen {
                 skin
             );
 
-            if (user.getName().equals(currentUser.getName()))
+            if (user.getName().equals(currentName))
                 row.setColor(Color.CYAN);
             else if (count == 0)
                 row.setColor(Color.GOLD);
@@ -128,7 +132,7 @@ public class ScoreboardView implements Screen {
             else
                 row.setColor(Color.WHITE);
 
-            row.setPosition(800, 600 - count*50);
+            row.setPosition(rowX, rowY - count * 50f);
             stage.addActor(row);
             count++;
         }
@@ -146,11 +150,11 @@ public class ScoreboardView implements Screen {
         controller.handleHintButtons();
 
         if (this.sortChanged) {
-            stage.clear();
+            this.sortChanged = false;
+            stage.dispose();
             show();
-            printBoard();
+            return;
         }
-        this.sortChanged = false;
 
     }
 

@@ -1,6 +1,7 @@
 package com.Graphic.Controller.MainMenu;
 
 import com.Graphic.Main;
+import com.Graphic.Model.Enum.Hero;
 import com.Graphic.Model.GameAssetManager;
 import com.Graphic.View.MainMenu.HintMenuView;
 import com.Graphic.View.MainMenu.MainMenuView;
@@ -40,31 +41,39 @@ public class HintMenuController {
                 errorLabel.setSize(500, 600);
             } else if (view.isKeyClicked()) {
                 errorLabel.setText(
-                       "\n          W           -->  up    \n" +
-                        "           D           -->  Right \n" +
-                        "           S           -->  Down  \n" +
-                        "           A           -->  Left  \n" +
-                        "    Mouse Click  -->  Right   \n"
+                       "\n     W  /  A  /  S  /  D   -->  Move       \n\n" +
+                        "         Mouse             -->  Aim        \n\n" +
+                        "      Left Click           -->  Shoot      \n\n" +
+                        "           R               -->  Reload     \n\n" +
+                        "          Esc              -->  Pause      \n"
                 );
-                errorLabel.setSize(400, 400);
+                errorLabel.setSize(440, 400);
             } else if (view.isHeroClicked()) {
-                errorLabel.setText(" \n \n");
-                errorLabel.appendText("                 Shana                \n\n");
-                errorLabel.appendText("        HP : 4          Speed : 4      \n");
-                errorLabel.appendText("                Diamond                \n\n");
-                errorLabel.appendText("        HP : 7          Speed : 1      \n");
-                errorLabel.appendText("                Scarlet                \n\n");
-                errorLabel.appendText("        HP : 3          Speed : 5      \n");
-                errorLabel.setSize(400, 600);
+                errorLabel.setText(heroTable());
+                errorLabel.setSize(460, 560);
             }
             else
                 errorLabel.setText("");
         }
     }
 
+    /**
+     * Built from the Hero enum so it cannot drift out of step with the real stats. The
+     * hardcoded version listed the wrong speeds and left out two of the five heroes.
+     */
+    private String heroTable() {
+
+        StringBuilder text = new StringBuilder("\n");
+        for (Hero hero : Hero.values())
+            text.append(String.format("%n   %-9s HP %d   Speed %d%n",
+                hero.name().charAt(0) + hero.name().substring(1).toLowerCase(),
+                hero.getHP(), hero.getSpeed()));
+
+        return text.toString();
+    }
+
     public TextArea getErrorLabel() {
         errorLabel.setDisabled(true);
-        errorLabel.setPosition(1000, 300);
         return errorLabel;
     }
 }

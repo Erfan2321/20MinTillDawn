@@ -4,6 +4,8 @@ import com.Graphic.Controller.SignUpMenuController;
 import com.Graphic.Main;
 import com.Graphic.Model.GameAssetManager;
 import com.Graphic.Model.GameModel.Player;
+import com.Graphic.Model.User;
+import com.Graphic.Model.UserManager;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
@@ -51,6 +53,8 @@ public class GameOverScreen implements Screen {
         int kills = player.getKill();
         float score = surviveTime * kills;
 
+        recordResult(kills, (int) score, (int) surviveTime);
+
         table.add(new Label("Username: " + player.getUsername(), skin)).row();
         table.add(new Label("Survived Time: " + (int)surviveTime + " sec", skin)).row();
         table.add(new Label("Kills: " + kills, skin)).row();
@@ -73,6 +77,23 @@ public class GameOverScreen implements Screen {
         stage.addActor(table);
     }
 
+    /**
+     * Writes the finished run back to the signed-in account. Without this the scoreboard and
+     * profile always showed zero, because nothing ever updated the stored User.
+     */
+    private void recordResult(int kills, int score, int surviveTime) {
+
+        User user = GameAssetManager.getGameAssetManager().currentUser;
+        // Guests are not part of the roster, so there is nothing to record against.
+        if (user == null || !UserManager.userExists(user.getName()))
+            return;
+
+        user.setPoint(user.getPoint() + score);
+        user.setMustKill(user.getMustKill() + kills);
+        user.setMustTime(Math.max(user.getMustTime(), surviveTime));
+        UserManager.saveUser(user);
+    }
+
     @Override
     public void render(float delta) {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
@@ -89,7 +110,11 @@ public class GameOverScreen implements Screen {
     @Override public void resume() {}
     @Override public void hide() {}
     @Override public void dispose() {
-        stage.dispose();
-        skin.dispose();
+        if (stage != null)
+            stage.dispose();
+
+        backgroundTexture.dispose();
+        // The skin belongs to GameAssetManager and is shared by every screen, so it is only
+        // disposed when the game exits. Disposing it here blanked out all later menus.
     }
 }

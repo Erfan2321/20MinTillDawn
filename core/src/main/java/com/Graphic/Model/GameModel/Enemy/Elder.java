@@ -8,13 +8,12 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
-import java.awt.*;
-
 public class Elder extends Enemy {
 
     private static Animation<Texture> animation = null;
     private static Texture shieldTexture = null;
-    private SFXManager shieldSFX = new SFXManager();
+    private static Texture texture = null;
+    private final SFXManager shieldSFX = SFXManager.getInstance();
 
     private boolean shieldActive = false;
     private CollisionRect shieldRect;
@@ -84,6 +83,10 @@ public class Elder extends Enemy {
         shieldActive = false;
     }
 
+    public boolean isShieldActive() {
+        return shieldActive;
+    }
+
     public Animation<Texture> getAnimation() {
 
         if (animation == null) {
@@ -95,6 +98,10 @@ public class Elder extends Enemy {
         return animation;
     }
     public Texture getTexture() {
-        return new Texture(Gdx.files.internal("Enemy/Elder/ElderBrain.png"));
+
+        if (texture == null)
+            texture = new Texture(Gdx.files.internal("Enemy/Elder/ElderBrain.png"));
+
+        return texture;
     }
 }

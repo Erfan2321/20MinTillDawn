@@ -38,7 +38,7 @@ public class Player {
     private int damagerAbility;
     private int speedyAbility;
 
-    private SFXManager sfxManager = new SFXManager();
+    private SFXManager sfxManager = SFXManager.getInstance();
 
     public Player(String username, int point, int kill, WeaponType weapon, Hero hero,
                   int amogreaseAbility, int progreaseAbility, int speedyAbility, int damagerAbility,
