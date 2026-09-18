@@ -3,6 +3,7 @@ package com.Graphic.Controller;
 import com.Graphic.Controller.MainMenu.MainMenuController;
 import com.Graphic.Main;
 import com.Graphic.Model.GameAssetManager;
+import com.Graphic.Model.User;
 import com.Graphic.Model.UserManager;
 import com.Graphic.View.*;
 import com.Graphic.View.MainMenu.MainMenuView;
@@ -16,7 +17,6 @@ public class LoginMenuController {
     private ForgetPassView view2;
     private LoginMenuView view;
     private Label errorLabel;
-    private Label pass;
 
 
     public void setView (LoginMenuView view) {
@@ -30,36 +30,55 @@ public class LoginMenuController {
         errorLabel = new Label("", GameAssetManager.getGameAssetManager().getSkin());
     }
 
+    /**
+     * Two-step password recovery. The new-password field starts hidden: the first submit
+     * checks the security answer and reveals it, the second submit applies the new password.
+     */
     public void handleForgetMenuButtons() {
 
-        if (view2 != null) {
+        if (view2 == null)
+            return;
 
-            if (view2.isSubClicked() && !view2.getAnswerSecQ().getText().isEmpty() && !view2.getName().getText().isEmpty()) {
-                Main.getMain().getScreen().dispose();
+        if (view2.isBackClicked()) {
+            backToLogin();
+            return;
+        }
+        if (!view2.isSubClicked())
+            return;
 
-                if (!UserManager.userExists(view2.getName().getText()))
-                    errorLabel.setText(UserNotFound.getMessage(languages));
+        String username = view2.getName().getText();
+        String answer = view2.getAnswerSecQ().getText();
 
-                else if (checkSecAnswer(view2.getAnswerSecQ().getText(), view2.getName().getText())) {
-                    view2.getNewPassword().setVisible(true);
-                    view2.getNewPassword().setWidth(500);
-                }
-                else
-                    errorLabel.setText(WrongSecQ.getMessage(languages));
+        if (!view2.getNewPassword().isVisible()) {
 
-            } else if (view2.isBackClicked()) {
-                Main.getMain().getScreen().dispose();
-                Main.getMain().setScreen(new LoginMenuView(new LoginMenuController(), GameAssetManager.getGameAssetManager().getSkin()));
-            } else if (view2.isSubClicked() && view2.getNewPassword().getText().isEmpty()) {
-
-                if (view2.getNewPassword().getText().matches("^(?=.*[@#$%&*)(_])(?=.*[A-Z])(?=.*[a-z])(?=.*\\d).{8,}$")) {
-                    UserManager.loadUser(view2.getName().getText()).setPass(view2.getNewPassword().getText());
-                    Main.getMain().getScreen().dispose();
-                    Main.getMain().setScreen(new LoginMenuView(new LoginMenuController(), GameAssetManager.getGameAssetManager().getSkin()));
-                }
-                else
-                    errorLabel.setText(weekPassword.getMessage(languages));
+            if (username.isEmpty()) {
+                errorLabel.setText(emptyName.getMessage(languages));
+            } else if (answer.isEmpty()) {
+                errorLabel.setText(emptySecQ.getMessage(languages));
+            } else if (!UserManager.userExists(username)) {
+                errorLabel.setText(UserNotFound.getMessage(languages));
+            } else if (!checkSecAnswer(answer, username)) {
+                errorLabel.setText(WrongSecQ.getMessage(languages));
+            } else {
+                errorLabel.setText("");
+                view2.getNewPassword().setVisible(true);
             }
+            return;
+        }
+
+        String newPassword = view2.getNewPassword().getText();
+        User user = UserManager.loadUser(username);
+
+        if (user == null) {
+            errorLabel.setText(UserNotFound.getMessage(languages));
+        } else if (newPassword.isEmpty()) {
+            errorLabel.setText(emptyPass.getMessage(languages));
+        } else if (!User.isStrongPassword(newPassword)) {
+            errorLabel.setText(weekPassword.getMessage(languages));
+        } else {
+            user.setPassword(newPassword);
+            UserManager.saveUser(user);
+            backToLogin();
         }
     }
 
@@ -69,12 +88,12 @@ public class LoginMenuController {
 
             if (view.isLoginClicked()) {
 
-                Main.getMain().getScreen().dispose();
                 errorLabel.setText(canLogin(view.getName().getText(),
                     view.getPass().getText()));
 
                 if (errorLabel.getText().isEmpty()) {
                     GameAssetManager.getGameAssetManager().currentUser = UserManager.loadUser(view.getName().getText());
+                    Main.getMain().getScreen().dispose();
                     Main.getMain().setScreen(new MainMenuView(new MainMenuController(), GameAssetManager.getGameAssetManager().getSkin()));
                 }
 
@@ -90,18 +109,24 @@ public class LoginMenuController {
         }
     }
 
+    private void backToLogin () {
+
+        Main.getMain().getScreen().dispose();
+        Main.getMain().setScreen(new LoginMenuView(new LoginMenuController(), GameAssetManager.getGameAssetManager().getSkin()));
+    }
+
     private String canLogin (String name, String pass) {
 
-        if (name.isEmpty() || name.equals("Enter your name"))
+        if (name.isEmpty())
             return emptyName.getMessage(languages);
 
-        if (pass.isEmpty() || pass.equals("Enter your password"))
+        if (pass.isEmpty())
             return emptyPass.getMessage(languages);
 
         if (!UserManager.userExists(name))
             return UserNotFound.getMessage(languages);
 
-        if (!UserManager.loadUser(name).getPass().equals(pass))
+        if (!UserManager.loadUser(name).checkPassword(pass))
             return IncorrectPass.getMessage(languages);
 
         return "";
@@ -113,9 +138,5 @@ public class LoginMenuController {
     public Label getErrorLabel() {
 
         return errorLabel;
-    }
-    public Label getPass () {
-
-        return this.pass;
     }
 }

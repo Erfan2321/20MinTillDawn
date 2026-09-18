@@ -3,6 +3,7 @@ package com.Graphic.View.MainMenu;
 import com.Graphic.Controller.MainMenu.SettingMenuController;
 import com.Graphic.Main;
 import com.Graphic.Model.GameAssetManager;
+import com.Graphic.Model.MusicManager;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
@@ -44,7 +45,7 @@ public class SettingMenuView implements Screen {
         table = new Table();
 
         musicSelectBox = new SelectBox<>(skin);
-        musicSelectBox.setItems("Experience", "Old", "Havana", "Rahgozar", "Inja Irane");
+        musicSelectBox.setItems(MusicManager.getTrackNames());
         musicVolumeSlider = new Slider(0, 1, 0.1f, false, skin);
 
         lang = new SelectBox<>(skin);
@@ -114,7 +115,12 @@ public class SettingMenuView implements Screen {
         table.add(backButton).colspan(2).width(150).height(60).padTop(20);
         stage.addActor(table);
     }
-    @Override public void resize(int width, int height) {}
+    @Override
+    public void resize(int width, int height) {
+
+        if (stage != null)
+            stage.getViewport().update(width, height, true);
+    }
     @Override public void pause() {}
     @Override public void resume() {}
     @Override public void hide() {}

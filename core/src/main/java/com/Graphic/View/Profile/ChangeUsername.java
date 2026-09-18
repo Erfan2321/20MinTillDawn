@@ -105,8 +105,11 @@ public class ChangeUsername implements Screen {
         this.backClicked = false;
         this.subClicked = false;
     }
-    public void resize(int i, int i1) {
+    @Override
+    public void resize(int width, int height) {
 
+        if (stage != null)
+            stage.getViewport().update(width, height, true);
     }
     public void pause() {
 

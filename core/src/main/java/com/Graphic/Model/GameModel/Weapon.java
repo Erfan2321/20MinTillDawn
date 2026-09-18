@@ -28,6 +28,7 @@ public class Weapon {
         weaponSprite.setSize(50,50);
 
         maxAmmo = type.getMaxAmmo();
+        ammo = maxAmmo;
     }
 
     public int getAmmo() {

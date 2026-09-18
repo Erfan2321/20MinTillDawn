@@ -46,6 +46,8 @@ public class ChangePass implements Screen {
 
         this.name = new TextField("", skin);
         name.setMessageText(enterPass.getMessage(languages));
+        name.setPasswordCharacter('*');
+        name.setPasswordMode(true);
 
         this.back = new TextButton(Back.getMessage(languages), skin);
         this.sub  = new TextButton(Submit.getMessage(languages), skin);
@@ -103,8 +105,11 @@ public class ChangePass implements Screen {
         this.backClicked = false;
         this.subClicked = false;
     }
-    public void resize(int i, int i1) {
+    @Override
+    public void resize(int width, int height) {
 
+        if (stage != null)
+            stage.getViewport().update(width, height, true);
     }
     public void pause() {
 

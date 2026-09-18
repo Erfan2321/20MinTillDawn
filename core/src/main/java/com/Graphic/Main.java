@@ -3,8 +3,6 @@ package com.Graphic;
 import com.Graphic.Controller.Profile.ChangeAvatarController;
 import com.Graphic.Controller.SignUpMenuController;
 import com.Graphic.Model.GameAssetManager;
-import com.Graphic.Model.User;
-import com.Graphic.Model.UserManager;
 import com.Graphic.View.SignUpMenuView;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -23,13 +21,6 @@ public class Main extends Game {
         main = this;
         batch = new SpriteBatch();
 
-        for (int i = 0 ; i < 10 ; i++) {
-            User user = new User("Test"+i , "1234", "wer");
-            user.setPoint(i*20);
-            user.setMustKill(i*10);
-            user.setMustTime(i+2);
-            UserManager.saveUser(user);
-        }
         main.setScreen(new SignUpMenuView(new SignUpMenuController(), GameAssetManager.getGameAssetManager().getSkin()));
     }
     public void setBlackWhiteMode(boolean enabled) {
@@ -39,7 +30,9 @@ public class Main extends Game {
        super.render();
     }
     public void dispose() {
+        super.dispose();
         batch.dispose();
+        GameAssetManager.getGameAssetManager().dispose();
     }
     public static SpriteBatch getBatch() {
         return batch;

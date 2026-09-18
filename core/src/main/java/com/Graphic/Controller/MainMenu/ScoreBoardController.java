@@ -38,7 +38,7 @@ public class ScoreBoardController {
                 else if (view.getSelectedSort().equals("username"))
                     users.sort(Comparator.comparing(User::getName).thenComparingInt(User::getMustKill).reversed().thenComparing(User::getName));
 
-                else if (view.getSelectedSort().equals("kiⅼⅼ"))
+                else if (view.getSelectedSort().equals("kill"))
                     users.sort(Comparator.comparingInt(User::getMustKill).reversed().thenComparing(User::getName));
 
                 else if (view.getSelectedSort().equals("survival time"))

@@ -1,0 +1,15 @@
+# Background music playlist.
+#
+# One track per line, in the form:   Display name|path/to/file
+# Paths are relative to the assets/ folder. Lines starting with # are ignored,
+# and any line whose file is missing is skipped at startup.
+# The first playable track is the one that plays when the game starts.
+#
+# No music ships with this repository. To add your own, drop the files into
+# assets/music/ and list them below. Only use tracks you have the right to
+# redistribute -- for example CC0 or CC-BY music from freesound.org,
+# opengameart.org or incompetech.com.
+#
+# Example:
+# Main Theme|music/main-theme.mp3
+# Boss Fight|music/boss-fight.ogg

@@ -53,8 +53,12 @@ public class SignUpMenuView implements Screen {
         this.login = new TextButton(LoginMenu.getMessage(languages), skin);
         this.finish = new TextButton(SignUp.getMessage(languages), skin);
         this.Title = new Label(SignUpTitle.getMessage(languages), skin);
-        this.name = new TextField(enterName.getMessage(languages), skin);
-        this.pass = new TextField(enterPass.getMessage(languages), skin);
+        this.name = new TextField("", skin);
+        this.name.setMessageText(enterName.getMessage(languages));
+        this.pass = new TextField("", skin);
+        this.pass.setMessageText(enterPass.getMessage(languages));
+        this.pass.setPasswordCharacter('*');
+        this.pass.setPasswordMode(true);
         securityQuestion = new Label(SecurityQ.getMessage(languages), skin);
         securityAnswer = new TextField("", skin);
         this.playAsGuest = new TextButton(playAsGuest1.getMessage(languages), skin);
@@ -141,8 +145,10 @@ public class SignUpMenuView implements Screen {
     }
 
     @Override
-    public void resize(int i, int i1) {
+    public void resize(int width, int height) {
 
+        if (stage != null)
+            stage.getViewport().update(width, height, true);
     }
 
     @Override

@@ -151,8 +151,11 @@ public class PreGameMenuView implements Screen {
         this.heroChanged = false;
         this.weaponChanged = false;
     }
-    public void resize(int i, int i1) {
+    @Override
+    public void resize(int width, int height) {
 
+        if (stage != null)
+            stage.getViewport().update(width, height, true);
     }
     public void pause() {
 

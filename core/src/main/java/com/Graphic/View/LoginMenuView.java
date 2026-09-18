@@ -48,8 +48,12 @@ public class LoginMenuView implements Screen {
 
         this.title = new Label(LoginMenu.getMessage(languages), skin);
 
-        this.name = new TextField(enterName.getMessage(languages), skin);
-        this.pass = new TextField(enterPass.getMessage(languages), skin);
+        this.name = new TextField("", skin);
+        this.name.setMessageText(enterName.getMessage(languages));
+        this.pass = new TextField("", skin);
+        this.pass.setMessageText(enterPass.getMessage(languages));
+        this.pass.setPasswordCharacter('*');
+        this.pass.setPasswordMode(true);
 
         this.back = new TextButton(Back.getMessage(languages), skin);
         this.login = new TextButton(Login.getMessage(languages), skin);
@@ -127,8 +131,10 @@ public class LoginMenuView implements Screen {
     }
 
     @Override
-    public void resize(int i, int i1) {
+    public void resize(int width, int height) {
 
+        if (stage != null)
+            stage.getViewport().update(width, height, true);
     }
 
     @Override

@@ -59,7 +59,7 @@ public class ScoreboardView implements Screen {
 
         sortLabel = new Label(" Sorted By ", skin);
         sortBy = new SelectBox<>(skin);
-        sortBy.setItems("point", "username", "kiⅼⅼ", "survival time");
+        sortBy.setItems("point", "username", "kill", "survival time");
 
         sortedUsers = new ArrayList<>(UserManager.getAllUsers());
         sortedUsers.sort(Comparator.comparingInt(User::getPoint).reversed());
@@ -154,7 +154,12 @@ public class ScoreboardView implements Screen {
 
     }
 
-    @Override public void resize(int width, int height) {}
+    @Override
+    public void resize(int width, int height) {
+
+        if (stage != null)
+            stage.getViewport().update(width, height, true);
+    }
     @Override public void pause() {}
     @Override public void resume() {}
     @Override public void hide() {}

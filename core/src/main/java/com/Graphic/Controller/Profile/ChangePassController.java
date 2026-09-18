@@ -2,6 +2,7 @@ package com.Graphic.Controller.Profile;
 
 import com.Graphic.Main;
 import com.Graphic.Model.GameAssetManager;
+import com.Graphic.Model.User;
 import com.Graphic.Model.UserManager;
 import com.Graphic.View.Profile.ChangePass;
 import com.Graphic.View.Profile.ProfileMenuView;
@@ -32,7 +33,7 @@ public class ChangePassController {
 
                 if (errorLabel.getText().isEmpty()) {
                     errorLabel.setText(ChangeName.getMessage(languages));
-                    GameAssetManager.getGameAssetManager().currentUser.setPass(view.getName().getText());
+                    GameAssetManager.getGameAssetManager().currentUser.setPassword(view.getName().getText());
                     UserManager.saveUser(GameAssetManager.getGameAssetManager().currentUser);
                 }
             }
@@ -45,13 +46,13 @@ public class ChangePassController {
     }
     private String checkPass (String pass) {
 
-        if (pass.isEmpty() || pass.equals("Enter your password"))
+        if (pass.isEmpty())
             return emptyPass.getMessage(languages);
 
-        if (pass.equals(GameAssetManager.getGameAssetManager().currentUser.getPass()))
+        if (GameAssetManager.getGameAssetManager().currentUser.checkPassword(pass))
             return "Please enter new Password";
 
-        if (!pass.matches("^(?=.*[@#$%&*)(_])(?=.*[A-Z])(?=.*[a-z])(?=.*\\d).{8,}$"))
+        if (!User.isStrongPassword(pass))
             return weekPassword.getMessage(languages);
 
         return "";

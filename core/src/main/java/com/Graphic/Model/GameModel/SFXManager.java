@@ -26,10 +26,12 @@ public class SFXManager {
 
     public void play (String soundKey) {
         Sound sound = sounds.get(soundKey);
-        if (sound != null && SettingMenuView.getInstance().getSfxCheckBox().isChecked())
+        if (sound == null) {
+            Gdx.app.error("SFXManager", "Sound not found: " + soundKey);
+            return;
+        }
+        if (SettingMenuView.getInstance().getSfxCheckBox().isChecked())
             sound.play();
-        else
-            Gdx.app.log("SFXManager", "Sound not found: " + soundKey);
     }
 
     public void dispose() {

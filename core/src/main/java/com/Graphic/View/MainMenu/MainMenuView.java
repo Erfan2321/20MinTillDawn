@@ -190,9 +190,10 @@ public class MainMenuView implements Screen {
     }
 
     @Override
-    public void resize(int i, int i1) {
-      //  stage.getViewport().update(width, height, true);
+    public void resize(int width, int height) {
 
+        if (stage != null)
+            stage.getViewport().update(width, height, true);
     }
 
     @Override

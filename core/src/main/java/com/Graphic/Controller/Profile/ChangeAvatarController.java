@@ -3,6 +3,8 @@ package com.Graphic.Controller.Profile;
 
 import com.Graphic.Main;
 import com.Graphic.Model.GameAssetManager;
+import com.Graphic.Model.User;
+import com.Graphic.Model.UserManager;
 import com.Graphic.View.Profile.ChangeAvatar;
 import com.Graphic.View.Profile.ProfileMenuView;
 import com.badlogic.gdx.files.FileHandle;
@@ -66,9 +68,12 @@ public class ChangeAvatarController {
                 Main.getMain().setScreen(new ProfileMenuView(new ProfileMenuController(), GameAssetManager.getGameAssetManager().getSkin()));
             } else if (view.isSubClicked()) {
                 Main.getMain().getScreen().dispose();
-                GameAssetManager.getGameAssetManager().currentUser.setAvatar(view.getTexture());
-                if (path != null && !path.isEmpty()) // path null TODO submit
-                    GameAssetManager.getGameAssetManager().currentUser.setAvatarPath(path);
+                User currentUser = GameAssetManager.getGameAssetManager().currentUser;
+                if (path != null && !path.isEmpty())
+                    currentUser.setAvatarPath(path);
+                currentUser.setAvatar(view.getTexture());
+                // Without this the new avatar is lost as soon as the game restarts.
+                UserManager.saveUser(currentUser);
                 Main.getMain().setScreen(new ProfileMenuView(new ProfileMenuController(), GameAssetManager.getGameAssetManager().getSkin()));
             }
         }
@@ -79,8 +84,8 @@ public class ChangeAvatarController {
     }
     public void onFileDropped(FileHandle fileHandle) {
         if (fileHandle != null && fileHandle.exists()) {
+            path = fileHandle.file().getAbsolutePath();
             view.changeAvatar(new Texture(fileHandle));
-            GameAssetManager.getGameAssetManager().currentUser.setAvatar(new Texture(fileHandle));
         }
     }
 

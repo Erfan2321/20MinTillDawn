@@ -8,12 +8,7 @@ import com.Graphic.Model.UserManager;
 import com.Graphic.View.LoginMenuView;
 import com.Graphic.View.MainMenu.MainMenuView;
 import com.Graphic.View.SignUpMenuView;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
-import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 
 import static com.Graphic.Model.Enum.Message.*;
 import static com.Graphic.View.MainMenu.SettingMenuView.languages;
@@ -22,7 +17,6 @@ public class SignUpMenuController {
 
     private SignUpMenuView view;
     private Label erorrLabel;
-    Texture backgroundTexture = new Texture(Gdx.files.internal("back1.png"));
 
 
     public void setView (SignUpMenuView view) {
@@ -36,12 +30,10 @@ public class SignUpMenuController {
         if (view != null) {
             if (view.finishClicked) {
 
-                Main.getMain().getScreen().dispose();
                 erorrLabel.setText(canRegister(view.getName().getText(),
                     view.getPass().getText(), view.getSecurityAnswer().getText()));
 
                 if (erorrLabel.getText().isEmpty()) {
-                    erorrLabel.setText(successReg.getMessage(languages));
 
                     User user = new User(
                         view.getName().getText(),
@@ -50,6 +42,10 @@ public class SignUpMenuController {
                     );
                     GameAssetManager.getGameAssetManager().currentUser = user;
                     UserManager.saveUser(user);
+
+                    // A successful sign up signs the player in, the same way the guest button does.
+                    Main.getMain().getScreen().dispose();
+                    Main.getMain().setScreen(new MainMenuView(new MainMenuController(), GameAssetManager.getGameAssetManager().getSkin()));
                 }
             }
             else if (view.guestClicked) {
@@ -70,10 +66,10 @@ public class SignUpMenuController {
         if (UserManager.userExists(view.getName().getText()))
             return usernameTaken.getMessage(languages);
 
-        if (name.isEmpty() || name.equals("Enter your name"))
+        if (name.isEmpty())
             return emptyName.getMessage(languages);
 
-        if (password.isEmpty() || password.equals("Enter your password"))
+        if (password.isEmpty())
             return emptyPass.getMessage(languages);
 
         if (securityAnswer.isEmpty())
@@ -86,7 +82,7 @@ public class SignUpMenuController {
     }
     private boolean checkPass (String pass) {
 
-        return pass.matches("^(?=.*[@#$%&*)(_])(?=.*[A-Z])(?=.*[a-z])(?=.*\\d).{8,}$");
+        return User.isStrongPassword(pass);
     }
     public Label getErorrLabel() {
 

@@ -38,7 +38,7 @@ public class ForgetPassView implements Screen {
     private boolean backClicked;
     private boolean subClicked;
 
-    Texture backgroundTexture = new Texture(Gdx.files.internal("back1.png"));
+    Texture backgroundTexture = new Texture(Gdx.files.internal("back14.png"));
 
 
     public ForgetPassView(LoginMenuController loginMenuController, Skin skin) {
@@ -55,6 +55,8 @@ public class ForgetPassView implements Screen {
 
         this.newPassword = new TextField("", skin);
         newPassword.setMessageText("new password");
+        newPassword.setPasswordCharacter('*');
+        newPassword.setPasswordMode(true);
 
         this.submit = new TextButton(Submit.getMessage(languages), skin);
         this.back = new TextButton(Back.getMessage(languages), skin);
@@ -127,16 +129,15 @@ public class ForgetPassView implements Screen {
             if (!stage.getActors().contains(controller.getErrorLabel(), true))
                 stage.addActor(controller.getErrorLabel());
         }
-        else if (controller.getPass() != null) {
-            controller.getPass().setPosition(650, 400);
-            stage.addActor(controller.getPass());
-        }
         this.subClicked = false;
         this.backClicked = false;
     }
 
-    public void resize(int i, int i1) {
+    @Override
+    public void resize(int width, int height) {
 
+        if (stage != null)
+            stage.getViewport().update(width, height, true);
     }
     public void pause() {
 

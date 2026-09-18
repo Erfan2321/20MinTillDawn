@@ -162,8 +162,11 @@ public class HintMenuView implements Screen {
 
         backClicked = false;
     }
-    public void resize(int i, int i1) {
+    @Override
+    public void resize(int width, int height) {
 
+        if (stage != null)
+            stage.getViewport().update(width, height, true);
     }
     public void pause() {
 

@@ -120,11 +120,7 @@ public class GameMenuView implements Screen, InputProcessor {
         Gdx.input.setInputProcessor(this);
 
         setCustomCursor();
-        health.setPosition(20, Gdx.graphics.getHeight() - 90);
-        kills.setPosition(20, Gdx.graphics.getHeight() - 120);
-        level.setPosition(20, Gdx.graphics.getHeight() - 150);
-        ammo.setPosition(20, Gdx.graphics.getHeight() - 180);
-        timerLabel.setPosition(20, Gdx.graphics.getHeight() - 210);
+        layoutHud(Gdx.graphics.getHeight());
 
         topBar.addToStage(stage);
         stage.addActor(ammo);
@@ -400,8 +396,28 @@ public class GameMenuView implements Screen, InputProcessor {
             player.getWeapon().setMaxAmmo(Integer.MAX_VALUE - 40);
         }
     }
-    public void resize(int i, int i1) {
+    private void layoutHud (int height) {
 
+        health.setPosition(20, height - 90);
+        kills.setPosition(20, height - 120);
+        level.setPosition(20, height - 150);
+        ammo.setPosition(20, height - 180);
+        timerLabel.setPosition(20, height - 210);
+    }
+    @Override
+    public void resize(int width, int height) {
+
+        if (stage != null) stage.getViewport().update(width, height, true);
+        if (uiStage != null) uiStage.getViewport().update(width, height, true);
+        if (levelStage != null) levelStage.getViewport().update(width, height, true);
+
+        // The world camera is sized in pixels, so it has to follow the window too or the
+        // visible play area stops matching where the mouse actually points.
+        camera.setToOrtho(false, width, height);
+        camera.position.set(player.getPosX(), player.getPosY(), 0);
+        camera.update();
+
+        layoutHud(height);
     }
     public boolean keyUp(int i) {
 

@@ -3,8 +3,8 @@ package com.Graphic.Model.GameModel;
 import com.Graphic.Model.Enum.Hero;
 import com.Graphic.Model.Enum.WeaponType;
 import com.Graphic.Model.Game;
+import com.Graphic.Model.GameFiles;
 import com.Graphic.Model.GameModel.Enemy.*;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -12,6 +12,8 @@ import com.google.gson.GsonBuilder;
 import java.util.ArrayList;
 
 public class SaveManager {
+
+    private static final String SAVE_FILE = "savegame.json";
 
     public void saveGame() {
         SaveData data = new SaveData();
@@ -55,15 +57,15 @@ public class SaveManager {
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         String json = gson.toJson(data);
 
-        FileHandle file = Gdx.files.local("savegame.json");
-        file.writeString(json, false);
+        FileHandle file = GameFiles.data(SAVE_FILE);
+        file.writeString(json, false, "UTF-8");
     }
 
     public void loadGame() {
-        FileHandle file = Gdx.files.local("savegame.json");
+        FileHandle file = GameFiles.data(SAVE_FILE);
         if (!file.exists()) return;
 
-        String json = file.readString();
+        String json = file.readString("UTF-8");
         Gson gson = new Gson();
         SaveData data = gson.fromJson(json, SaveData.class);
 

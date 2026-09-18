@@ -136,7 +136,12 @@ public class ProfileMenuView implements Screen {
         stage.dispose();
     }
 
-    @Override public void resize(int width, int height) {}
+    @Override
+    public void resize(int width, int height) {
+
+        if (stage != null)
+            stage.getViewport().update(width, height, true);
+    }
     @Override public void pause() {}
     @Override public void resume() {}
     @Override public void hide() {}

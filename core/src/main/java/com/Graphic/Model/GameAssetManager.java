@@ -4,8 +4,9 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.utils.Disposable;
 
-public class GameAssetManager {
+public class GameAssetManager implements Disposable {
 
     private static GameAssetManager gameAssetManager;
     public ShaderProgram shader;
@@ -15,7 +16,11 @@ public class GameAssetManager {
     private Texture batShotTexture = null;
     private Texture bulletTexture = null;
 
-    public User currentUser = new User("erfan", "Erf@n2321", "Dog"); // TODO
+    /**
+     * The account that is currently signed in. Null until the player signs up, logs in,
+     * or continues as a guest.
+     */
+    public User currentUser;
 
     private GameAssetManager() {
 
@@ -51,5 +56,19 @@ public class GameAssetManager {
     public void setSkin(Skin skin) {
 
         this.skin = skin;
+    }
+
+    @Override
+    public void dispose() {
+
+        if (skin != null) skin.dispose();
+        if (shader != null) shader.dispose();
+        if (batShotTexture != null) batShotTexture.dispose();
+        if (bulletTexture != null) bulletTexture.dispose();
+
+        skin = null;
+        shader = null;
+        batShotTexture = null;
+        bulletTexture = null;
     }
 }

@@ -18,11 +18,11 @@ public enum Message {
     successReg    ("successfully registered",       "enregistré avec succès"),
     playAsGuest1  ("play as guest",                 "jouer en tant qu'invité"),
     enterPass     ("Enter your password",           "entrez votre mot de passe"),
-    UserNotFound  ("Username not found!",           "Le nom d'utilisateur est dé"),
-    SecurityQ     ("What's your favorite singer?",  "Quel est ton animal préféré?"),
+    UserNotFound  ("Username not found!",           "Nom d'utilisateur introuvable !"),
+    SecurityQ     ("What's your favorite singer?",  "Quel est ton chanteur préféré ?"),
     emptyName     ("name can't be empty",           "le nom ne peut pas être vide"),
-    IncorrectPass ("Password is incorrect",         "supprimer le compte ne peut pas"),
-    weekPassword  ("password is week",              "le mot de passe est une semaine"),
+    IncorrectPass ("Password is incorrect",         "Mot de passe incorrect"),
+    weekPassword  ("password is too weak",          "Mot de passe trop faible"),
     usernameTaken ("The username is already taken", "Le nom d'utilisateur est déjà pris"),
     emptyPass     ("password can't be empty",       "le mot de passe ne peut pas être vide"),
     emptySecQ     ("Security Question can't be empty","La question de sécurité ne peut pas être vide"),
@@ -32,14 +32,14 @@ public enum Message {
     LoginMenu     ("Login menu", "Menu de connexion"),
     WrongSecQ     ("wrong answer", "mauvaise réponse"),
     ForgetPass    ("Forget Pass", "Mot de passe oublié"),
-    AnswerSecQ    ("Answer Security Question","La question de sécurité ne peut pas" ),
+    AnswerSecQ    ("Answer Security Question","Répondez à la question de sécurité" ),
 
 
     ChangeAvatar  ("change Avatar",   "changer Avatar"),
     DeleteAccount ("delete Account",  "supprimer le compte"),
     ChangePassword("change Pass", "changer le mot de passe"),
     ChangeUsername("change name", "changer le nom d'utilisateur"),
-    ChangeName    ("Username successfully changed", "changer le nom d'utilisateur"),
+    ChangeName    ("Username successfully changed", "Nom d'utilisateur modifié avec succès"),
 
                                         // Hint menu
 
